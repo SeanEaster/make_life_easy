@@ -45,7 +45,7 @@ from src.models.prodlda import ProdLDA, plot_word_cloud
 @click.option(
     "--epochs",
     type=int,
-    default=1000,
+    default=50,
 )
 @click.option(
     "--batch_size",

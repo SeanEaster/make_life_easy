@@ -19,6 +19,8 @@ endif
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
+all: models/10_topics.png models/20_topics.png
+
 data/raw/NIPS_1987-2015.csv:
 	curl -o $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00371/NIPS_1987-2015.csv
 
@@ -28,13 +30,8 @@ data/processed/NIPS_1987-2015.csv: src/data/transpose.py data/raw/NIPS_1987-2015
 data/processed/all.pt: src/data/csv_to_tensor.py data/interim/NIPS_1987-2015.csv
 	$(PYTHON_INTERPRETER) $^ $@ --no-dense
 
-# data/processed/train.pt 
-# data/processed/validation.pt 
-# data/processed/test.pt &: src/data/split.py data/processed/all.pt
-# 	$(PYTHON_INTERPRETER) $^ $(@D)
-
 models/%_topics.png: src/models/fit_lda.py data/processed/NIPS_1987-2015.csv src/models/prodlda.py 
-	$(PYTHON_INTERPRETER) $< $(word 2, $^) $@
+	$(PYTHON_INTERPRETER) $< $(word 2, $^) $@ --topics $*
 
 ## Install Python Dependencies
 requirements: test_environment
