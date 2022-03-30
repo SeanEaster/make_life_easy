@@ -21,16 +21,20 @@ endif
 #################################################################################
 all: models/10_topics.png models/20_topics.png
 
-data/raw/NIPS_1987-2015.csv:
+data/raw/NIPS_1987-2015.csv: 
+	mkdir -p $(@D)
 	curl -o $@ https://archive.ics.uci.edu/ml/machine-learning-databases/00371/NIPS_1987-2015.csv
 
 data/processed/NIPS_1987-2015.csv: src/data/transpose.py data/raw/NIPS_1987-2015.csv
+	mkdir -p $(@D)
 	$(PYTHON_INTERPRETER) $^ $@
 
 data/processed/all.pt: src/data/csv_to_tensor.py data/interim/NIPS_1987-2015.csv
+	mkdir -p $(@D)
 	$(PYTHON_INTERPRETER) $^ $@ --no-dense
 
 models/%_topics.png: src/models/fit_lda.py data/processed/NIPS_1987-2015.csv src/models/prodlda.py 
+	mkdir -p $(@D)
 	$(PYTHON_INTERPRETER) $< $(word 2, $^) $@ --topics $*
 
 ## Install Python Dependencies
